@@ -172,9 +172,7 @@ class Modalidades extends Connection implements crudModalidades{
 
 		while ($i <= $calculate ) {
 
-			if($_GET['page'] > $limite_numeros){
-
-			}
+			
 
 			if($_GET['page'] == $i){
 				echo "<li class='active'><a href='?page=$i'>$i</a></li>";
