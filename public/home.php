@@ -11,11 +11,11 @@ require_once "../config/header.inc.php";
 		<table class="striped">
 			<thead>
 				<tr>
-					<th>nome</th>
-					<th>telefone</th>
-					<th>email</th>
-					<th>modalidade</th>
-					<th>mensalidade</th>
+					<th>NOME</th>
+					<th>TELEFONE</th>
+					<th>EMAIL</th>
+					<th>MODALIDADE</th>
+					<th>MENSALIDADE</th>
 				</tr>
 			</thead>
 			<tbody>

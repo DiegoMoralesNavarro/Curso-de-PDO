@@ -3,7 +3,7 @@
 session_start();
  require_once "../config/header.inc.php";
  ?>
-
+ 
 
 <div class="row container">
 	<div class="col s12">
@@ -47,6 +47,10 @@ session_start();
 			<tbody>
 				<?php require_once "../database/modalidades/read.php"; ?>
 			</tbody>
+
+			<ul class='pagination'>
+				<?php require_once "../database/modalidades/paginar.php"; ?>
+			</ul>
 		</table>
 
 	</div>
