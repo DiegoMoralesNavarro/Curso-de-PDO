@@ -158,7 +158,7 @@ class Modalidades extends Connection implements crudModalidades{
 		
 		$calculate = ceil($count/$this->getLimitLista()); //total dividido pelo limite
 
-		$i = 1;
+		$i = $_GET['page'] - 2;
 
 		$anterior = $_GET['page'] - 1;
 		$seginte = $_GET['page'] + 1;
@@ -170,10 +170,9 @@ class Modalidades extends Connection implements crudModalidades{
 
 		echo " <li class='waves-effect'><a href='?page=$anterior'><i class='material-icons'>chevron_left</i></a></li>";	
 
-		while ($i <= $calculate ) {
+		while ($i <= $_GET['page'] + 2 ) {
 
 			
-
 			if($_GET['page'] == $i){
 				echo "<li class='active'><a href='?page=$i'>$i</a></li>";
 			}else{
