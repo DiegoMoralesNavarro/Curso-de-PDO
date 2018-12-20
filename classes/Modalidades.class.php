@@ -62,7 +62,7 @@ class Modalidades extends Connection implements crudModalidades{
 	public function __construct(){
 
 		$this->setMaxLinks(3);// maximo de numeros na paginação
-		$this->setMaxPaginas(9);// maximo de item por pagina
+		$this->setMaxPaginas(2);// maximo de item por pagina
 
 	}
 
@@ -158,6 +158,7 @@ class Modalidades extends Connection implements crudModalidades{
 			
 			for($i = $pagina - $this->getMaxLinks(); $i <= $pagina - 1; $i++ ){
 				if($i >= 1){
+					//impedir valor negativo - apartir do 1 sera gerado
 					echo "<li class='waves-effect'><a href='?pagina=$i'>$i</a></li>";
 				}
 			}
@@ -169,11 +170,14 @@ class Modalidades extends Connection implements crudModalidades{
 					echo "<li class='waves-effect'><a href='?pagina=$i'>$i</a></li>";
 				}
 			}
+
 			if($pagina == $total_Paginas){
 				echo " <li class='disabled'><a><i class='material-icons'>chevron_right</i></a></li>  ";
 			}else{
 				echo " <li class='waves-effect'><a href='?pagina=$pagina_Avancar'><i class='material-icons'>chevron_right</i></a></li>  ";
 			}	
+		}else{
+			// não mostrar paginação pois o total do DB é menor que o o limite exibido
 		}
 
 		
