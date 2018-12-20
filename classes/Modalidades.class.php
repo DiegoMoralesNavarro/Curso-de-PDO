@@ -62,7 +62,7 @@ class Modalidades extends Connection implements crudModalidades{
 	public function __construct(){
 
 		$this->setMaxLinks(3);// maximo de numeros na paginação
-		$this->setMaxPaginas(2);// maximo de item por pagina
+		$this->setMaxPaginas(9);// maximo de item por pagina
 
 	}
 
