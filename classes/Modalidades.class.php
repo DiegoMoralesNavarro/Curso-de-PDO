@@ -10,7 +10,8 @@ class Modalidades extends Connection implements crudModalidades{
 	private $id;
 	private $modalidade;
 	private $mensalidade;
-	public $limitLista;
+	private $maxLinks;
+	private $maxPaginas;
 
 
 
@@ -40,19 +41,28 @@ class Modalidades extends Connection implements crudModalidades{
 		return $this->mensalidade;
 	}
 
-	public function setLimitLista($limitLista){
-		$this->limitLista = $limitLista;
+	public function setMaxLinks($maxLinks){
+		$this->maxLinks = $maxLinks;
 	}
 
-	public function getLimitLista(){
-		return $this->limitLista;
+	public function getMaxLinks(){
+		return $this->maxLinks;
+	}
+
+	public function setMaxPaginas($maxPaginas){
+		$this->maxPaginas = $maxPaginas;
+	}
+
+	public function getMaxPaginas(){
+		return $this->maxPaginas;
 	}
 
 	///
 
 	public function __construct(){
 
-		$this->setLimitLista(1);
+		$this->setMaxLinks(3);// maximo de numeros na paginação
+		$this->setMaxPaginas(2);// maximo de item por pagina
 
 	}
 
@@ -105,110 +115,44 @@ class Modalidades extends Connection implements crudModalidades{
 
 	}
 
-	public function dados($sql){
+
+
+	public function read(){
+
+		
+		$pagina = (isset($_GET['pagina'])) ? (int)$_GET['pagina'] : 1;
+		 
+		$inicio = (($this->getMaxPaginas() * $pagina) - $this->getMaxPaginas());
+		
+		$sql = "SELECT * FROM tb_modalidades limit $inicio , ".$this->getMaxPaginas()." ";
 		$stmt = Connection::prepare($sql); //conexão
 		$stmt->execute();
 
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		foreach ($result as $value) {
-				$this->setId($value['id']);
-				$this->setModalidade($value['modalidade']);
-				$this->setMensalidade($value['mensalidade']);
 
-				$_id = $this->getId();
-				$_mod = $this->getModalidade();
-				$_mens = $this->getMensalidade();
-
-				echo "<tr>";
-				echo "<td>$_id</td>";
-				echo "<td>$_mod</td>";
-				echo "<td>$_mens</td>";
-				echo "<td> <a href='edit-mod.php?id=$_id'> <i class='material-icons left'>edit</i> Editar </a> </td>";
-				echo "<td> <a href='../database/modalidades/delete.php?id=$_id'> <i class='material-icons left'>delete</i> Delete </a> </td>";
-				echo "<td> <a href='novo-aluno.php?id=$_id'> <i class='material-icons left'>person_add</i> Novo Aluno </a> </td>";
-				echo "</tr>";
-			}
-	}
-
-	public function read(){
-		$limit = $this->getLimitLista();
-
-		if(!isset($_GET['page'])){
-			$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET 1";
-		 	$this->dados($sql);
-		}else{
-			$url = $_GET['page']; // pegar valor da page
-			$mod = $url*$limit - $limit;
-
-			$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET $mod";
-			$this->dados($sql);
-		}
-
-		// if (isset($_GET['page'])) {
-		// 	$url = $_GET['page']; // pegar valor da page
-		// 	$mod = $url*$limit - $limit;
-
-		// 	$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET $mod";
-		// 	$this->dados($sql);
-
-		// }else{
-		// 	$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET 1";
-		// 	$this->dados($sql);
-		// }
+		require_once "../forms/table-read-mod.php";
 
 	}
 
 	public function paginar(){
-		
-		$sql_Pg = "SELECT * FROM tb_modalidades";
-		$stmt_Pg = Connection::prepare($sql_Pg); //conexão
-		$stmt_Pg->execute();
-
-		$count = $stmt_Pg->rowCount();// total de registro
-		
-		$calculate = ceil($count/$this->getLimitLista()); //total dividido pelo limite
-
-		//bt 
-		if (!isset($_GET['page'])) {
-			$anterior =  - 1;
-			$seginte =  + 1;
-		}else{
-			$anterior = $_GET['page'] - 1;
-			$seginte = $_GET['page'] + 1;
-		}
-		
-		
-
-		echo " <li class='waves-effect'><a href='?page=$anterior'><i class='material-icons'>chevron_left</i></a></li>";	
 
 		
-			for($i = 1;  $i <= $calculate; $i++){ 
-					
-				if (!isset($_GET['page'])){
+		$pagina = (isset($_GET['pagina'])) ? (int)$_GET['pagina'] : 1;
+		$pagina_Voltar = $pagina - 1;
+		$pagina_Avancar = $pagina + 1;
 
-					if(1 == $i){
-						echo "<li class='active'><a href='?page=$i'>$i</a></li>";
-					}else{
-						echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
-					}
+		$sql_pg = "SELECT * FROM tb_modalidades";
+		$stmt_pg = Connection::prepare($sql_pg); //conexão
+		$stmt_pg->execute();
 
-				}else{
-					if($_GET['page'] == $i){
-						echo "<li class='active'><a href='?page=$i'>$i</a></li>";
-					}else{
-						echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
-					}
-				}
-				
-			}
-	
+		$total = $stmt_pg->rowCount();
+		$total_Paginas = ceil($total/$this->getMaxPaginas());
 
-		echo " <li class='waves-effect'><a href='?page=$seginte'><i class='material-icons'>chevron_right</i></a></li>";
+		require_once "../forms/table-page-mod.php";
+
 		
 	}
-
-
 
 
 
