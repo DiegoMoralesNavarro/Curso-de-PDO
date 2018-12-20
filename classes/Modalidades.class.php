@@ -95,11 +95,11 @@ class Modalidades extends Connection implements crudModalidades{
 
 		if($stmt->execute()):
 			$_SESSION['sucesso'] = "Cadastrado com sucesso.";
-			header("location:../../public/modalidades.php?page=1");
+			header("location:../../public/modalidades.php");
 			echo "s";
 		else:
 			$_SESSION['erro'] = "Não foi possivel cadastrar";
-			header("location:../../public/modalidades.php?page=1");
+			header("location:../../public/modalidades.php");
 			echo "e";
 		endif;
 
@@ -134,17 +134,28 @@ class Modalidades extends Connection implements crudModalidades{
 	public function read(){
 		$limit = $this->getLimitLista();
 
-		if (isset($_GET['page'])) {
+		if(!isset($_GET['page'])){
+			$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET 1";
+		 	$this->dados($sql);
+		}else{
 			$url = $_GET['page']; // pegar valor da page
 			$mod = $url*$limit - $limit;
 
 			$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET $mod";
 			$this->dados($sql);
-
-		}else{
-			$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET 1";
-			$this->dados($sql);
 		}
+
+		// if (isset($_GET['page'])) {
+		// 	$url = $_GET['page']; // pegar valor da page
+		// 	$mod = $url*$limit - $limit;
+
+		// 	$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET $mod";
+		// 	$this->dados($sql);
+
+		// }else{
+		// 	$sql = "SELECT * FROM tb_modalidades limit $limit OFFSET 1";
+		// 	$this->dados($sql);
+		// }
 
 	}
 
@@ -158,29 +169,40 @@ class Modalidades extends Connection implements crudModalidades{
 		
 		$calculate = ceil($count/$this->getLimitLista()); //total dividido pelo limite
 
-		$i = $_GET['page'] - 2;
-
-		$anterior = $_GET['page'] - 1;
-		$seginte = $_GET['page'] + 1;
-
-		$penultimo_fim = $calculate;
-		$penultimo_inicio = ($calculate + 1) - $calculate;
-
+		//bt 
+		if (!isset($_GET['page'])) {
+			$anterior =  - 1;
+			$seginte =  + 1;
+		}else{
+			$anterior = $_GET['page'] - 1;
+			$seginte = $_GET['page'] + 1;
+		}
+		
 		
 
 		echo " <li class='waves-effect'><a href='?page=$anterior'><i class='material-icons'>chevron_left</i></a></li>";	
 
-		while ($i <= $_GET['page'] + 2 ) {
+		
+			for($i = 1;  $i <= $calculate; $i++){ 
+					
+				if (!isset($_GET['page'])){
 
-			
-			if($_GET['page'] == $i){
-				echo "<li class='active'><a href='?page=$i'>$i</a></li>";
-			}else{
-				echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
+					if(1 == $i){
+						echo "<li class='active'><a href='?page=$i'>$i</a></li>";
+					}else{
+						echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
+					}
+
+				}else{
+					if($_GET['page'] == $i){
+						echo "<li class='active'><a href='?page=$i'>$i</a></li>";
+					}else{
+						echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
+					}
+				}
+				
 			}
-
-			$i++;
-		}
+	
 
 		echo " <li class='waves-effect'><a href='?page=$seginte'><i class='material-icons'>chevron_right</i></a></li>";
 		
