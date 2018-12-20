@@ -48,15 +48,13 @@ session_start();
 				<?php require_once "../database/modalidades/read.php"; ?>
 
 			</tbody>
-<hr>
-			<ul class='pagination'>
-				<?php require_once "../database/modalidades/paginar.php"; ?>
-			</ul>
 		</table>
+		<ul class='pagination'>
+				<?php require_once "../database/modalidades/paginar.php"; ?>
+		</ul>
 
 	</div>
 </div>
-
 
 
 
