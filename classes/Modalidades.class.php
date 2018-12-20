@@ -130,7 +130,6 @@ class Modalidades extends Connection implements crudModalidades{
 
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 		require_once "../forms/table-read-mod.php";
 
 	}
@@ -149,7 +148,33 @@ class Modalidades extends Connection implements crudModalidades{
 		$total = $stmt_pg->rowCount();
 		$total_Paginas = ceil($total/$this->getMaxPaginas());
 
-		require_once "../forms/table-page-mod.php";
+
+		if ($total > $this->getMaxPaginas()) {
+			if($pagina == 1){
+				echo " <li class='disabled'><a ><i class='material-icons'>chevron_left</i></a></li>  ";
+			}else{
+				echo " <li class='waves-effect'><a href='?pagina=$pagina_Voltar'><i class='material-icons'>chevron_left</i></a></li>  ";
+			}
+			
+			for($i = $pagina - $this->getMaxLinks(); $i <= $pagina - 1; $i++ ){
+				if($i >= 1){
+					echo "<li class='waves-effect'><a href='?pagina=$i'>$i</a></li>";
+				}
+			}
+
+			echo "<li class='active'><a href='?pagina=$i'>$i</a></li>";
+
+			for($i = $pagina + 1; $i <= $pagina + $this->getMaxLinks(); $i++ ){
+				if($i <= $total_Paginas){
+					echo "<li class='waves-effect'><a href='?pagina=$i'>$i</a></li>";
+				}
+			}
+			if($pagina == $total_Paginas){
+				echo " <li class='disabled'><a><i class='material-icons'>chevron_right</i></a></li>  ";
+			}else{
+				echo " <li class='waves-effect'><a href='?pagina=$pagina_Avancar'><i class='material-icons'>chevron_right</i></a></li>  ";
+			}	
+		}
 
 		
 	}
